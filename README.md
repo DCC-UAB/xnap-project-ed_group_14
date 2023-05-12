@@ -26,3 +26,6 @@ Write here the name and UAB mail of the group members
 Xarxes Neuronals i Aprenentatge Profund
 Grau de __Write here the name of your estudies (Artificial Intelligence, Data Engineering or Computational Mathematics & Data analyitics)__, 
 UAB, 2023
+
+
+Raül Push test
