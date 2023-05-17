@@ -5,7 +5,7 @@ El objetivo de este proyecto es generar descripciones de imágenes con herramien
 Los [datos](https://www.kaggle.com/datasets/adityajn105/flickr8k) que se han utilziado para entrenar a la red neuronal consisten en 8.000 imagenes cada una pareada con 5 diferentes leyendas que proveen descripciones de las entidades y eventos de la imagen.
 
 ## Entorno de ejecución
-Antes de ejecutar el código tienes que crear un entorno local con conda y activarlo. El archivo [environment.yml](https://github.com/DCC-UAB/XNAP-Project/environment.yml) tiene todas las dependencias necesarias. Ejecute el siguiente comando: ``conda env create -n NOMBREDEENTORNO --file environment.yml `` para crear un entorno conda con todas las dependencias requeridas y luego activarlo:
+Antes de ejecutar el código tienes que crear un entorno local con conda y activarlo. El archivo [environment.yml](https://github.com/DCC-UAB/XNAP-Project/environment.yml) tiene todas las dependencias necesarias. Ejecute el siguiente comando: ``conda env create -n ENVNAME --file environment.yml `` para crear un entorno conda con todas las dependencias requeridas y luego activarlo:
 ```
 conda env create -n ENVNAME --file environment.yml
 conda activate ENVNAME
