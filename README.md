@@ -6,14 +6,14 @@ Los [datos](https://www.kaggle.com/datasets/adityajn105/flickr8k) que se han uti
 
 ## Entorno de ejecución
 Antes de ejecutar el código tienes que crear un entorno local con conda y activarlo. El archivo [environment.yml](https://github.com/DCC-UAB/XNAP-Project/environment.yml) tiene todas las dependencias necesarias. Ejecute el siguiente comando: ``conda env create -n NOMBREDEENTORNO --file environment.yml `` para crear un entorno conda con todas las dependencias requeridas y luego activarlo:
-```shell
-foo@bar:~$ conda env create -n ENVNAME --file environment.yml
-foo@bar:~$ conda activate ENVNAME
+```
+conda env create -n ENVNAME --file environment.yml
+conda activate ENVNAME
 ```
 
 To run the example code:
-```shell
-foo@bar:~$ python main.py
+```
+python main.py
 ```
 ## Arquitectura
 Arquitectura
