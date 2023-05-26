@@ -1,4 +1,11 @@
-
+#imports
+import numpy as np
+import torch
+from torch.utils.data import DataLoader,Dataset
+import torchvision.transforms as T
+import pandas as pd
+import os
+from collections import Counter
 
 
 
@@ -125,5 +132,37 @@ def get_data_loader(dataset,batch_size,shuffle=False,num_workers=1):
 
     return data_loader
 
+def generate_dataset():
+    #Initiate the Dataset and Dataloader
 
+    #setting the constants
+    data_location =  "data" # --> data
+    BATCH_SIZE = 256
+    # BATCH_SIZE = 6
+    NUM_WORKER = 4
+
+    #defining the transform to be applied
+    transforms = T.Compose([
+        T.Resize(226),                     
+        T.RandomCrop(224),                 
+        T.ToTensor(),                               
+        T.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
+    ])
+
+
+    #testing the dataset class
+    dataset =  FlickrDataset(
+        root_dir = data_location+"/Images",
+        caption_file = data_location+"/captions.txt",
+        transform=transforms
+    )
+
+    #writing the dataloader
+    data_loader = get_data_loader(
+        dataset=dataset,
+        batch_size=BATCH_SIZE,
+        num_workers=NUM_WORKER,
+        shuffle=True,
+        # batch_first=False
+    )
 

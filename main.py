@@ -10,6 +10,7 @@ import torchvision.transforms as transforms
 
 from train import *
 from test import *
+from dataset import get_data_loader
 from utils.utils import *
 from tqdm.auto import tqdm
 
@@ -23,27 +24,22 @@ torch.cuda.manual_seed_all(hash("so runs are repeatable") % 2**32 - 1)
 # Device configuration
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-# remove slow mirror from list of MNIST mirrors
-torchvision.datasets.MNIST.mirrors = [mirror for mirror in torchvision.datasets.MNIST.mirrors
-                                      if not mirror.startswith("http://yann.lecun.com")]
-
 
 
 
 def model_pipeline(cfg:dict) -> None:
     # tell wandb to get started
-    with wandb.init(project="pytorch-demo", config=cfg):
-      # access all HPs through wandb.config, so logging matches execution!
-      config = wandb.config
+    with wandb.init(project="caption", notes='execution', tags=['main'], reinit=True, config=cfg):
+        # access all HPs through wandb.config, so logging matches execution!
+        config = wandb.config
 
-      # make the model, data, and optimization problem
-      model, train_loader, test_loader, criterion, optimizer = make(config)
+        train_loader, test_loader = 
 
-      # and use them to train the model
-      train(model, train_loader, criterion, optimizer, config)
-
-      # and test its final performance
-      test(model, test_loader)
+        # and use them to train the model
+        train(model, optimizer, criterion, epochs, data_loader)
+        break;
+        # and test its final performance
+        test(model, test_loader)
 
     return model
 
@@ -51,16 +47,17 @@ def model_pipeline(cfg:dict) -> None:
 
 
 if __name__ == "__main__":
-    wandb.login()
-
-    config = dict(
-        epochs=5,
-        classes=10,
-        kernels=[16, 32],
-        batch_size=128,
-        learning_rate=5e-3,
-        dataset="MNIST",
-        architecture="CNN")
+    
+    config = {
+        'embed_size': 300,
+        'vocab_size' : len(dataset.vocab),
+        'attention_dim': 256,
+        'encoder_dim': 2048,
+        'decoder_dim': 512,
+        'learning_rate': 3e-4,
+        'epochs': 2,
+        'batch_size': BATCH_SIZE
+    }
         
     model = model_pipeline(config)
 
