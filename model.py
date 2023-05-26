@@ -182,21 +182,22 @@ class EncoderDecoder(nn.Module):
         outputs = self.decoder(features, captions)
         return outputs
 
-def create_model(embed_size, vocab_size, attemtion_dim, encoder_dim, decoder_dim):
+def create_model(embed_size, attemtion_dim, encoder_dim, decoder_dim, vocab, learning_rate):
     model = EncoderDecoder(
         embed_size=300,
-        vocab_size = len(dataset.vocab),
+        vocab_size = len(vocab),
         attention_dim=256,
         encoder_dim=2048,
         decoder_dim=512
-    ).to(device)
+    )
 
-    criterion = nn.CrossEntropyLoss(ignore_index=dataset.vocab.stoi["<PAD>"])
+    criterion = nn.CrossEntropyLoss(ignore_index=vocab.stoi["<PAD>"])
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
     return model, criterion, optimizer
 
 def save_model(model,num_epochs):
+    return
     model_state = {
         'num_epochs':num_epochs,
         'embed_size':embed_size,
