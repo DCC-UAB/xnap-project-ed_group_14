@@ -133,13 +133,14 @@ def get_data_loader(dataset,batch_size,shuffle=False,num_workers=1):
     return data_loader
 
 def generate_dataset():
+    BATCH_SIZE=256
+    NUM_WORKER=4
     #Initiate the Dataset and Dataloader
 
     #setting the constants
-    data_location =  "data" # --> data
-    BATCH_SIZE = 256
-    # BATCH_SIZE = 6
-    NUM_WORKER = 4
+    data_location_test =  "data/test" # --> data
+    data_location_train =  "data/train" # --> data
+
 
     #defining the transform to be applied
     transforms = T.Compose([
@@ -149,20 +150,37 @@ def generate_dataset():
         T.Normalize((0.485, 0.456, 0.406),(0.229, 0.224, 0.225))
     ])
 
+    dataset_train =  FlickrDataset(
+        root_dir = data_location_train+"/Images",
+        caption_file = data_location_train+"/captions.txt",
+        transform=transforms
+    )
 
     #testing the dataset class
-    dataset =  FlickrDataset(
-        root_dir = data_location+"/Images",
-        caption_file = data_location+"/captions.txt",
+    dataset_test =  FlickrDataset(
+        root_dir = data_location_test+"/Images",
+        caption_file = data_location_test+"/captions.txt",
         transform=transforms
     )
 
     #writing the dataloader
-    data_loader = get_data_loader(
-        dataset=dataset,
+    data_loader_train = get_data_loader(
+        dataset=dataset_train,
         batch_size=BATCH_SIZE,
         num_workers=NUM_WORKER,
         shuffle=True,
         # batch_first=False
     )
 
+    data_loader_test = get_data_loader(
+        dataset=dataset_test,
+        batch_size=BATCH_SIZE,
+        num_workers=NUM_WORKER,
+        shuffle=True,
+        # batch_first=False
+    )
+
+    vocab = dataset_test.vocab
+    return data_loader_train, data_loader_test, vocab
+
+    
