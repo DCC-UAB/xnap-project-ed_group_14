@@ -10,7 +10,10 @@ import torchvision.transforms as transforms
 
 from train import *
 from test import *
-from dataset import get_data_loader
+from dataset import generate_dataset
+from data_preparation import create_split
+from model import create_model
+
 from utils.utils import *
 from tqdm.auto import tqdm
 
@@ -31,13 +34,22 @@ def model_pipeline(cfg:dict) -> None:
     # tell wandb to get started
     with wandb.init(project="caption", notes='execution', tags=['main'], reinit=True, config=cfg):
         # access all HPs through wandb.config, so logging matches execution!
-        config = wandb.config
+        config = wandb.config()
 
-        train_loader, test_loader = 
+        train_loader, test_loader, vocab = generate_dataset()
+
+        model, criterion, optimizer = create_model(
+            embed_size=300,
+            attention_dim=256,
+            encoder_dim=2048,
+            decoder_dim=512,
+            vocab = vocab,
+            learning_rate=3E-4
+        )
 
         # and use them to train the model
-        train(model, optimizer, criterion, epochs, data_loader)
-        break;
+        train(model, optimizer, criterion, cfg['epochs'], train_loader, vocab)
+        
         # and test its final performance
         test(model, test_loader)
 
@@ -50,14 +62,15 @@ if __name__ == "__main__":
     
     config = {
         'embed_size': 300,
-        'vocab_size' : len(dataset.vocab),
         'attention_dim': 256,
         'encoder_dim': 2048,
         'decoder_dim': 512,
         'learning_rate': 3e-4,
         'epochs': 2,
-        'batch_size': BATCH_SIZE
+        'batch_size': 256
     }
+
+    create_split()
         
     model = model_pipeline(config)
 
