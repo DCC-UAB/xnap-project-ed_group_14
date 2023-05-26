@@ -1,5 +1,6 @@
 import os
 import shutil
+from tqdm.auto import tqdm
 
 def train_split(train_folder,test_folder,image_folder,text_file):
     image_names = []
@@ -22,7 +23,7 @@ def train_split(train_folder,test_folder,image_folder,text_file):
     num_train = int(num_images * 0.8)
 
     true=0
-    for i in range(num_train):
+    for i in tqdm(range(num_train)):
         src_path = os.path.join(image_folder, image_names[i])
         dst_path = os.path.join(train_folder+'/Images', image_names[i])
         shutil.copy(src_path, dst_path)
@@ -34,7 +35,7 @@ def train_split(train_folder,test_folder,image_folder,text_file):
                 true = 1    
             file.write(f"{image_names[i]},{captions[i]}\n")
     true = 0
-    for i in range(num_train, num_images):
+    for i in tqdm(range(num_train, num_images)):
         src_path = os.path.join(image_folder, image_names[i])
         dst_path = os.path.join(test_folder+'/Images', image_names[i])
         shutil.copy(src_path, dst_path)
