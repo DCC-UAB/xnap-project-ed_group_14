@@ -1,4 +1,5 @@
 from tqdm.auto import tqdm
+import torch
 import wandb
 
 #def train(model, loader, criterion, optimizer, config):
@@ -44,7 +45,8 @@ def train_log(loss, example_ct, epoch):
     print(f"Loss after {str(example_ct).zfill(5)} examples: {loss:.3f}")
 
 
-def train(model, optimizer, criterion, epochs, data_loader):
+def train(model, optimizer, criterion, epochs, data_loader, vocab):
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print_every = 100
     wandb.watch(model, criterion, log='all', log_freq=10)
     for epoch in range(1,epochs+1): 
@@ -62,7 +64,7 @@ def train(model, optimizer, criterion, epochs, data_loader):
             # Calculate the batch loss.
             targets = captions[:,1:]
 
-            loss = criterion(outputs.view(-1, vocab_size), targets.reshape(-1))
+            loss = criterion(outputs.view(-1, vocab), targets.reshape(-1))
 
             # Backward pass.
             loss.backward()
@@ -72,9 +74,9 @@ def train(model, optimizer, criterion, epochs, data_loader):
             optimizer.step()
 
         #save the latest model
-        save_model(model,epoch)
-        print('Epoch Finished - Registering in WandB')
-        wandb.log({"total_loss": loss_epoch})
-        wandb.log({'mean_loss': loss_epoch/len(data)})
+        #save_model(model,epoch)
+        print(f'Epoch {epoch} Finished - Registering in WandB')
+        #wandb.log({"total_loss": loss_epoch})
+        wandb.log({'mean_loss': loss_epoch/len(data_loader.dataset)})
     
     print('EPOCHS FINISHED')
