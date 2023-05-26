@@ -16,13 +16,21 @@ To run the example code:
 foo@bar:~$ python main.py
 ```
 ## Arquitectura
-Arquitectura
+La arquitectura de nuestro modelo es la siguiente:
+
+*  Un modelo Encoder, que dada una imagen la va codificando
+*  Un modelo Atention, que extrae las características más relevantes de la imagen
+*  Un modelo base de LSTM, utilizado para que mediante las características haga la generación de texto
+*  Un modelo Decoder, que dada una imagen codificada, procede a descodificarla. En el proceso de descodificación, extrae las características mediante el modelo Atention y genera texto utilizando el LSTM
+
 
 ## Dataset preprocessing
-Dataset preprocessing
+Tras haber separado en directorios las imagenes para realizar un train_test_split. Les aplicamos:
+Transformaciones de resizing, random crop y normalización.
+Tenemos pensado aplicar data augmentation
 
 ## Train
-Train
+Hasta el momento se han probado ejecuciones residuales, de comprobación de ejecución con diferentes metodos (para poder reconstruir maneras de evaluar el modelo, diferentes metricas, ...)
 
 ## Results
 Results
