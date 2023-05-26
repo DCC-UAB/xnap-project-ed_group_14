@@ -1,4 +1,5 @@
-
+import os
+import shutil
 
 def train_split(train_folder,test_folder,image_folder,text_file):
     image_names = []
@@ -49,7 +50,7 @@ def train_split(train_folder,test_folder,image_folder,text_file):
 
 
 
-def crate_split():
+def create_split():
 
     data_location = 'data'
     train_folder = data_location+"/train"
