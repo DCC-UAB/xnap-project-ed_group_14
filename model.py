@@ -8,6 +8,11 @@ import torchvision.models as models
 from torch.utils.data import DataLoader,Dataset
 import torchvision.transforms as T
 
+import torch_directml
+device = torch_directml.device()
+
+#device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 class EncoderCNN(nn.Module):
     def __init__(self):
         super(EncoderCNN, self).__init__()
@@ -65,6 +70,7 @@ class DecoderRNN(nn.Module):
         self.vocab_size = vocab_size
         self.attention_dim = attention_dim
         self.decoder_dim = decoder_dim
+        self.embed_size = embed_size
         
         self.embedding = nn.Embedding(vocab_size,embed_size)
         self.attention = Attention(encoder_dim,decoder_dim,attention_dim)
@@ -83,6 +89,10 @@ class DecoderRNN(nn.Module):
     
     def forward(self, features, captions):
         
+        #max_values, _ = torch.max(captions, dim=0)
+        #print(max_values)
+        #print(captions.shape)
+        #print(self.vocab_size, self.embed_size)
         #vectorize the caption
         embeds = self.embedding(captions)
         
@@ -110,7 +120,7 @@ class DecoderRNN(nn.Module):
         
         return preds, alphas
     
-    def generate_caption(self,features,max_len = 20,vocab=None):
+    def generate_caption(self,features,max_len = 20, vocab=None):
 
         # Inference part
         # Given the image features generate the captions
@@ -171,7 +181,7 @@ class EncoderDecoder(nn.Module):
         self.encoder = EncoderCNN()
         self.decoder = DecoderRNN(
             embed_size=embed_size,
-            vocab_size = len(dataset.vocab),
+            vocab_size = vocab_size,
             attention_dim=attention_dim,
             encoder_dim=encoder_dim,
             decoder_dim=decoder_dim
@@ -182,26 +192,26 @@ class EncoderDecoder(nn.Module):
         outputs = self.decoder(features, captions)
         return outputs
 
-def create_model(embed_size, attemtion_dim, encoder_dim, decoder_dim, vocab, learning_rate):
+def create_model(embed_size, attention_dim, encoder_dim, decoder_dim, vocab, learning_rate):
     model = EncoderDecoder(
-        embed_size=300,
+        embed_size=embed_size,
         vocab_size = len(vocab),
-        attention_dim=256,
-        encoder_dim=2048,
-        decoder_dim=512
-    )
+        attention_dim=attention_dim,
+        encoder_dim=encoder_dim,
+        decoder_dim=decoder_dim
+    ).to(device)
 
     criterion = nn.CrossEntropyLoss(ignore_index=vocab.stoi["<PAD>"])
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
     return model, criterion, optimizer
 
-def save_model(model,num_epochs):
-    return
+def save_model(model,num_epochs, embed_size,attention_dim,encoder_dim,decoder_dim,vocab_size):
+
     model_state = {
         'num_epochs':num_epochs,
         'embed_size':embed_size,
-        'vocab_size':len(dataset.vocab),
+        'vocab_size':vocab_size,
         'attention_dim':attention_dim,
         'encoder_dim':encoder_dim,
         'decoder_dim':decoder_dim,

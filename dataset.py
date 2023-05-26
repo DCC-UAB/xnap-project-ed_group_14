@@ -6,6 +6,11 @@ import torchvision.transforms as T
 import pandas as pd
 import os
 from collections import Counter
+import nltk
+nltk.download('punkt')
+from nltk.tokenize import word_tokenize
+from PIL import Image
+from torch.nn.utils.rnn import pad_sequence
 
 
 
@@ -133,7 +138,8 @@ def get_data_loader(dataset,batch_size,shuffle=False,num_workers=1):
     return data_loader
 
 def generate_dataset():
-    BATCH_SIZE=256
+    #BATCH_SIZE=256
+    BATCH_SIZE=64
     NUM_WORKER=4
     #Initiate the Dataset and Dataloader
 
@@ -180,7 +186,7 @@ def generate_dataset():
         # batch_first=False
     )
 
-    vocab = dataset_test.vocab
+    vocab = dataset_train.vocab
     return data_loader_train, data_loader_test, vocab
 
     

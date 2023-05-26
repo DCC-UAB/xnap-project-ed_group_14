@@ -1,6 +1,11 @@
 from tqdm.auto import tqdm
 import torch
 import wandb
+from model import save_model
+#Only Raul
+import torch_directml
+device = torch_directml.device()
+
 
 #def train(model, loader, criterion, optimizer, config):
 #    # Tell wandb to watch what the model gets up to: gradients, weights, and more!
@@ -46,13 +51,13 @@ def train_log(loss, example_ct, epoch):
 
 
 def train(model, optimizer, criterion, epochs, data_loader, vocab):
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print_every = 100
     wandb.watch(model, criterion, log='all', log_freq=10)
-    for epoch in range(1,epochs+1): 
+    for epoch in tqdm(range(1,epochs+1)): 
         loss_epoch = 0  
         bleu_epoch = 0
-        for idx, (image, captions) in enumerate(iter(data_loader)):
+        for idx, (image, captions) in tqdm(enumerate(iter(data_loader))):
             image,captions = image.to(device),captions.to(device)
 
             # Zero the gradients.
@@ -64,7 +69,7 @@ def train(model, optimizer, criterion, epochs, data_loader, vocab):
             # Calculate the batch loss.
             targets = captions[:,1:]
 
-            loss = criterion(outputs.view(-1, vocab), targets.reshape(-1))
+            loss = criterion(outputs.view(-1, len(vocab)), targets.reshape(-1))
 
             # Backward pass.
             loss.backward()
@@ -72,11 +77,14 @@ def train(model, optimizer, criterion, epochs, data_loader, vocab):
 
             # Update the parameters in the optimizer.
             optimizer.step()
+            
 
         #save the latest model
-        #save_model(model,epoch)
+        
         print(f'Epoch {epoch} Finished - Registering in WandB')
         #wandb.log({"total_loss": loss_epoch})
-        wandb.log({'mean_loss': loss_epoch/len(data_loader.dataset)})
+        wandb.log({'epoch':epoch, 'mean_loss': loss_epoch/len(data_loader.dataset)})
     
+    save_model(model,epoch)
+
     print('EPOCHS FINISHED')
