@@ -52,11 +52,11 @@ def model_pipeline(cfg:dict) -> None:
         )
 
         # and use them to train the model
-        train(model, optimizer, criterion, cfg['epochs'], train_loader, vocab)
+        train(model, optimizer, criterion, cfg['epochs'], train_loader, vocab, test_loader)
         
         save_model(model, cfg['epochs'], embed_size=300,attention_dim=256,encoder_dim=2048,decoder_dim=512, vocab_size=len(vocab))
         # and test its final performance
-        captions_reals, captions_predits, images_list = test(model, test_loader, )
+        #captions_reals, captions_predits, images_list = test(model, test_loader, )
 
     return model
 
