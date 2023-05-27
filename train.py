@@ -50,27 +50,24 @@ def train_log(loss, example_ct, epoch):
     print(f"Loss after {str(example_ct).zfill(5)} examples: {loss:.3f}")
 
 
-def train(model, optimizer, criterion, epochs, data_loader_train, vocab,data_loader_test):
+def train(model, optimizer, criterion, epochs, data_loader_train, vocab, data_loader_test):
     #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print_every = 100
     wandb.watch(model, criterion, log='all', log_freq=10)
     for epoch in tqdm(range(1,epochs+1)): 
         loss_epoch = 0  
         loss_test = 0
+        print('STARTING TRAIN\n')
+        model.train()
         for idx, (image, captions) in tqdm(enumerate(iter(data_loader_train))):
             image,captions = image.to(device),captions.to(device)
-
             # Zero the gradients.
             optimizer.zero_grad()
-
             # Feed forward
             outputs,attentions = model(image, captions)
-
             # Calculate the batch loss.
             targets = captions[:,1:]
-
             loss = criterion(outputs.view(-1, len(vocab)), targets.reshape(-1))
-
             # Backward pass.
             loss.backward()
             loss_epoch += loss.item()
@@ -78,25 +75,28 @@ def train(model, optimizer, criterion, epochs, data_loader_train, vocab,data_loa
             # Update the parameters in the optimizer.
             optimizer.step()
         
-            model.eval()
-        with torch.no_grad():
-            for idx, (image, captions) in enumerate(iter(data_loader_test)):
-                image, captions = image.to(device), captions.to(device)
-                outputs, attentions = model(image, captions)
-                targets = captions[:, 1:]
-                loss = criterion(outputs.view(-1, len(data_loader_test.dataset.vocab)), targets.reshape(-1))
-                loss_test += loss.item()
-                # Belu single image per batch
-                #bleu_test += bleu(model, image[0:1], targets[0], data_loaderdataset.vocab)
-                # perp_score(outputs, targets)
+        model.eval()
+        print('STARTING TEST\n')
+        
+        for idx, (image, captions) in tqdm(enumerate(iter(data_loader_test))):
+            image, captions = image.to(device), captions.to(device)
+            outputs, attentions = model(image, captions)
+            targets = captions[:, 1:]
+            targets = targets.cpu()
+            outputs = outputs.cpu()
+            loss = criterion(outputs.view(-1, len(data_loader_train.dataset.vocab)), targets.reshape(-1))
+            #print(loss.item())
+            loss_test += loss.item()
+            #print(loss_epoch)
+                
 
 
         #save the latest model
         
         print(f'Epoch {epoch} Finished - Registering in WandB')
         #wandb.log({"total_loss": loss_epoch})
-        wandb.log({'epoch':epoch, 'mean_loss_train': loss_epoch/len(data_loader_train.dataset)})
-        wandb.log({'epoch':epoch, 'mean_loss_test': loss_test/len(data_loader_train.dataset)})
+        wandb.log({'epoch':epoch, 'loss_train': loss_epoch/len(data_loader_train.dataset)})
+        wandb.log({'epoch':epoch, 'loss_test': loss_test/len(data_loader_train.dataset)})
     
     save_model(model,epoch)
 

@@ -13,6 +13,7 @@ from test import *
 from dataset import generate_dataset
 from data_preparation import create_split
 from model import create_model
+from prediction import predict
 
 from utils.utils import *
 from tqdm.auto import tqdm
@@ -36,9 +37,9 @@ torch.cuda.manual_seed_all(hash("so runs are repeatable") % 2**32 - 1)
 
 def model_pipeline(cfg:dict) -> None:
     # tell wandb to get started
-    with wandb.init(project="caption", notes='execution', tags=['main'], reinit=True, config=cfg):
+    with wandb.init(project="caption", name='20-epohs-initial',notes='execution', tags=['main'], reinit=True, config=cfg):
         # access all HPs through wandb.config, so logging matches execution!
-        config = wandb.config
+        wandb.define_metrics('epoch')
         print('GENERATING DATASET')
         train_loader, test_loader, vocab = generate_dataset()
         print('DATALOADER CREATED')
@@ -53,8 +54,8 @@ def model_pipeline(cfg:dict) -> None:
 
         # and use them to train the model
         train(model, optimizer, criterion, cfg['epochs'], train_loader, vocab, test_loader)
-        
-        save_model(model, cfg['epochs'], embed_size=300,attention_dim=256,encoder_dim=2048,decoder_dim=512, vocab_size=len(vocab))
+        save_model(model=model, num_epochs=cfg['epochs'], embed_size=300, attention_dim=256, encoder_dim=2048, decoder_dim=512, vocab_size=len(vocab))
+        predict(train_loader, model)
         # and test its final performance
         #captions_reals, captions_predits, images_list = test(model, test_loader, )
 
@@ -71,7 +72,7 @@ if __name__ == "__main__":
         'encoder_dim': 2048,
         'decoder_dim': 512,
         'learning_rate': 3e-4,
-        'epochs': 1,
+        'epochs': 30,
         #'batch_size': 256
         'batch_size':64
     }

@@ -206,7 +206,7 @@ def create_model(embed_size, attention_dim, encoder_dim, decoder_dim, vocab, lea
 
     return model, criterion, optimizer
 
-def save_model(model,num_epochs, embed_size,attention_dim,encoder_dim,decoder_dim,vocab_size):
+def save_model(model, num_epochs, embed_size, attention_dim, encoder_dim, decoder_dim, vocab_size):
 
     model_state = {
         'num_epochs':num_epochs,
@@ -218,4 +218,4 @@ def save_model(model,num_epochs, embed_size,attention_dim,encoder_dim,decoder_di
         'state_dict':model.state_dict()
     }
 
-    torch.save(model_state,'attention_model_state_proves.pth')
+    torch.save(model_state, 'attention_model_state_proves.pth')
