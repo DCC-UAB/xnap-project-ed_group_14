@@ -43,7 +43,9 @@ def model_pipeline(cfg:dict) -> None:
         wandb.define_metric('loss_test',step_metric='epoch')
         print('GENERATING DATASET')
         train_loader, test_loader, vocab = generate_dataset(cfg.get('batch_size'))
+        
         print('DATALOADER CREATED')
+
         model, criterion, optimizer = create_model(
             embed_size=cfg.get('embed_size'),
             attention_dim=cfg.get('attention_dim'),
@@ -55,8 +57,18 @@ def model_pipeline(cfg:dict) -> None:
 
         # and use them to train the model
         train(model, optimizer, criterion, cfg['epochs'], train_loader, vocab, test_loader)
-        save_model(model=model, num_epochs=cfg['epochs'], embed_size=300, attention_dim=256, encoder_dim=2048, decoder_dim=512, vocab_size=len(vocab))
+        print('MAKING SOME PREDICTIONS')
         predict(train_loader, model)
+        
+        print('SAVING MODEL')        
+        save_model(model=model, 
+                   num_epochs=cfg['epochs'], 
+                   embed_size=cfg.get('embed_size'), 
+                   attention_dim=cfg.get('attention_dim'), 
+                   encoder_dim=cfg.get('encoder_dim'), 
+                   decoder_dim=cfg.get('decoder_dim'), 
+                   vocab_size=len(vocab))
+        
         # and test its final performance
         #captions_reals, captions_predits, images_list = test(model, test_loader, )
 
@@ -73,8 +85,7 @@ if __name__ == "__main__":
         'encoder_dim': 2048,
         'decoder_dim': 512,
         'learning_rate': 0.01,
-        'epochs': 9,
-        #'batch_size': 256
+        'epochs': 1,
         'batch_size':64,
         'execution_name':'execution-test-lr-0.1'
     }
