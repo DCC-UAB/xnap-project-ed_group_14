@@ -18,9 +18,11 @@ def predict(data_loader, model):
     #show any 1
     dataiter = iter(data_loader)
     images,caption = next(dataiter)
-    print('REAL CAPTION:  ', caption[0])
-    img = images[0].detach().clone()
-    #img1 = images[0].detach().clone()
-    caps,alphas = get_caps_from(img.unsqueeze(0), model, data_loader.dataset.vocab)
-    print('PREDICTED CAPTION: ', caps)
-    #plot_attention(img, caps, alphas)
+    for images, caption in data_loader:
+        print('REAL CAPTION:  ', caption[0])
+        img = images[0].detach().clone()
+        #img1 = images[0].detach().clone()
+        caps,alphas = get_caps_from(img.unsqueeze(0), model, data_loader.dataset.vocab)
+        print('PREDICTED CAPTION: ', caps)
+        #plot_attention(img, caps, alphas)
+        print('\n\n')
