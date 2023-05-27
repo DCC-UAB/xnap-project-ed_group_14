@@ -130,3 +130,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+attention_model_state_proves.pth

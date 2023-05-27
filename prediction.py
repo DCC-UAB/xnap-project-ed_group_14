@@ -10,16 +10,18 @@ def get_caps_from(features_tensors, model, vocab):
     caption = ' '.join(caps)
     #show_image(features_tensors[0],title=caption)
     
-    return caps,alphas
+    return caption,alphas
 
 
 
 def predict(data_loader, model):
     #show any 1
     dataiter = iter(data_loader)
-    images,caption = next(dataiter)
-    for images, caption in data_loader:
-        print('REAL CAPTION:  ', caption[0])
+    images, caption = next(dataiter)
+    for i, (images, _) in enumerate(data_loader):
+        batch_len = len(images)
+        
+        print('REAL CAPTION:  ', caption)
         img = images[0].detach().clone()
         #img1 = images[0].detach().clone()
         caps,alphas = get_caps_from(img.unsqueeze(0), model, data_loader.dataset.vocab)

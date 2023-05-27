@@ -102,6 +102,5 @@ def train(model, optimizer, criterion, epochs, data_loader_train, vocab, data_lo
         wandb.log({'epoch':epoch, 'loss_train': loss_epoch/len(data_loader_train.dataset)})
         wandb.log({'epoch':epoch, 'loss_test': loss_test/len(data_loader_test.dataset)})
     
-    save_model(model,epoch)
 
     print('EPOCHS FINISHED')
