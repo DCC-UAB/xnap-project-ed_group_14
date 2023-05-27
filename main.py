@@ -37,19 +37,20 @@ torch.cuda.manual_seed_all(hash("so runs are repeatable") % 2**32 - 1)
 
 def model_pipeline(cfg:dict) -> None:
     # tell wandb to get started
-    with wandb.init(project="caption", name='20-epohs-initial',notes='execution', tags=['main'], reinit=True, config=cfg):
+    with wandb.init(project="caption", name=cfg.get('execution_name'),notes='execution', tags=['main'], reinit=True, config=cfg):
         # access all HPs through wandb.config, so logging matches execution!
-        wandb.define_metrics('epoch')
+        wandb.define_metric('loss_train',step_metric='epoch')
+        wandb.define_metric('loss_test',step_metric='epoch')
         print('GENERATING DATASET')
-        train_loader, test_loader, vocab = generate_dataset()
+        train_loader, test_loader, vocab = generate_dataset(cfg.get('batch_size'))
         print('DATALOADER CREATED')
         model, criterion, optimizer = create_model(
-            embed_size=300,
-            attention_dim=256,
-            encoder_dim=2048,
-            decoder_dim=512,
+            embed_size=cfg.get('embed_size'),
+            attention_dim=cfg.get('attention_dim'),
+            encoder_dim=cfg.get('encoder_dim'),
+            decoder_dim=cfg.get('decoder_dim'),
             vocab = vocab,
-            learning_rate=3E-4
+            learning_rate=cfg.get('learning_rate')
         )
 
         # and use them to train the model
@@ -71,10 +72,11 @@ if __name__ == "__main__":
         'attention_dim': 256,
         'encoder_dim': 2048,
         'decoder_dim': 512,
-        'learning_rate': 3e-4,
-        'epochs': 30,
+        'learning_rate': 0.01,
+        'epochs': 9,
         #'batch_size': 256
-        'batch_size':64
+        'batch_size':64,
+        'execution_name':'execution-test-lr-0.1'
     }
 
     create_split()

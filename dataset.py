@@ -137,9 +137,9 @@ def get_data_loader(dataset,batch_size,shuffle=False,num_workers=1):
 
     return data_loader
 
-def generate_dataset():
+def generate_dataset(batch_size):
     #BATCH_SIZE=256
-    BATCH_SIZE=64
+    BATCH_SIZE=batch_size
     NUM_WORKER=4
     #Initiate the Dataset and Dataloader
 

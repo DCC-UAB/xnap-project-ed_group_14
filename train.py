@@ -74,6 +74,10 @@ def train(model, optimizer, criterion, epochs, data_loader_train, vocab, data_lo
 
             # Update the parameters in the optimizer.
             optimizer.step()
+            if (idx+1)%print_every == 0:
+                print(f'Epoch{epoch}:  Loss{loss.item()}')
+                #wandb.log({'epoch':epoch, 'loss_batch_train': loss_epoch/len(data_loader_train.dataset)})
+                
         
         model.eval()
         print('STARTING TEST\n')
@@ -96,7 +100,7 @@ def train(model, optimizer, criterion, epochs, data_loader_train, vocab, data_lo
         print(f'Epoch {epoch} Finished - Registering in WandB')
         #wandb.log({"total_loss": loss_epoch})
         wandb.log({'epoch':epoch, 'loss_train': loss_epoch/len(data_loader_train.dataset)})
-        wandb.log({'epoch':epoch, 'loss_test': loss_test/len(data_loader_train.dataset)})
+        wandb.log({'epoch':epoch, 'loss_test': loss_test/len(data_loader_test.dataset)})
     
     save_model(model,epoch)
 
