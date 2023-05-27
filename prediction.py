@@ -1,6 +1,7 @@
 import torch_directml
 device = torch_directml.device()
 
+from tqdm import tqdm
 def get_caps_from(features_tensors, model, vocab):
     #generate the caption
     model.eval()
@@ -18,13 +19,16 @@ def predict(data_loader, model):
     #show any 1
     dataiter = iter(data_loader)
     images, caption = next(dataiter)
-    for i, (images, _) in enumerate(data_loader):
-        batch_len = len(images)
+
+    for images, cap in tqdm(enumerate(data_loader)):
         
-        print('REAL CAPTION:  ', caption)
+        l = [data_loader.dataset.vocab.itos[x.item()] for x in cap[0]]
+        r = ' '.join(l)
+        
+        print('REAL CAPTION:  ', r)
         img = images[0].detach().clone()
         #img1 = images[0].detach().clone()
         caps,alphas = get_caps_from(img.unsqueeze(0), model, data_loader.dataset.vocab)
         print('PREDICTED CAPTION: ', caps)
         #plot_attention(img, caps, alphas)
-        print('\n\n')
+        print('\n')
