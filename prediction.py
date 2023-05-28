@@ -16,7 +16,7 @@ def get_caps_from(features_tensors, model, vocab):
 def save_predictions(preds, cap):
     with open('results.csv', 'w', newline='') as file:
         escritor_csv = csv.writer(file)
-        for r, p in zip(preds, cap):
+        for r, p in zip(cap,preds):
             escritor_csv.writerow([r,p])
             
 
@@ -30,6 +30,7 @@ def predict(data_loader, model):
         
         l = [data_loader.dataset.vocab.itos[x.item()] for x in cap[0]]
         r = ' '.join(l)
+
         real_caption.append(r)
         
         print('REAL CAPTION:  ', r)
@@ -41,4 +42,4 @@ def predict(data_loader, model):
         #plot_attention(img, caps, alphas)
         print('\n')
     
-    save_predictions(preds, cap)
+    save_predictions(preds, real_caption)
