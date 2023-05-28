@@ -41,6 +41,15 @@ def model_pipeline(cfg:dict) -> None:
         # access all HPs through wandb.config, so logging matches execution!
         wandb.define_metric('loss_train',step_metric='epoch')
         wandb.define_metric('loss_test',step_metric='epoch')
+
+        wandb.define_metric('bleu_train', step_metric='epoch')
+        wandb.define_metric('bleu_test', step_metric='epoch')
+
+        wandb.define_metric('perp_train', step_metric='epoch')
+        wandb.define_metric('perp_test', step_metric='epoch')
+
+        
+
         print('GENERATING DATASET')
         train_loader, test_loader, vocab = generate_dataset(cfg.get('batch_size'))
         
