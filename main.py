@@ -18,8 +18,7 @@ from prediction import predict
 from utils.utils import *
 from tqdm.auto import tqdm
 
-import torch_directml
-device = torch_directml.device()
+
 
 
 # Ensure deterministic behavior
@@ -30,7 +29,7 @@ torch.manual_seed(hash("by removing stochasticity") % 2**32 - 1)
 torch.cuda.manual_seed_all(hash("so runs are repeatable") % 2**32 - 1)
 
 # Device configuration
-#device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 
@@ -73,13 +72,13 @@ if __name__ == "__main__":
         'encoder_dim': 2048,
         'decoder_dim': 512,
         'learning_rate': 0.01,
-        'epochs': 9,
-        #'batch_size': 256
-        'batch_size':64,
-        'execution_name':'execution-test-lr-0.1'
+        'epochs': 20,
+        'batch_size':256,
+        'execution_name':'execution-test-azure-lr-0.01'
     }
 
     create_split()
     print('DATA SPLIT DONE')
     model = model_pipeline(config)
 
+    

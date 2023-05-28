@@ -1,8 +1,7 @@
 import wandb
 import torch
 
-import torch_directml
-device = torch_directml.device()
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 #
 #def test(model, test_loader, device="cuda", save:bool= True):
 #    # Run the model on some test examples
