@@ -25,12 +25,12 @@ def predict(data_loader, model):
     #dataiter = iter(data_loader)
     #images, caption = next(dataiter)
     preds=[]
-    cap = []
+    real_caption = []
     for images, cap in data_loader:
         
         l = [data_loader.dataset.vocab.itos[x.item()] for x in cap[0]]
         r = ' '.join(l)
-        cap.append(r)
+        real_caption.append(r)
         
         print('REAL CAPTION:  ', r)
         img = images[0].detach().clone()
