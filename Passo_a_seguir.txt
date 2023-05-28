@@ -22,6 +22,12 @@ Coses que hem fet:l
 
 Coses que hem de fer: 
 - La dimensio de la LSTM canviarla --> rudir i augmentar
+- Tres raons per la qual la perplexity pot anar augmentant:
+    - 1 --> efecte de saturació, es a dir al principi de l'entrenament, el model pot aprendre ràpidament patrons facils aixo fara que la perpllexity disminueixi,
+            a mesura que el model va entrenant més, els patrons mes sutils i complexos es tornen mes dificils d'aprendre, el que pot comportar que la perplexity augmenti.
+    - 2 --> overfitting, aixo comporta que els de test augmentaran encara que el de train pugui anar disminuint
+    - 3 -- variabilitat de les dades, depenent de si es facil predir o no, es comporatara de una manera o de una altre.
+
 
 
 
