@@ -94,8 +94,8 @@ def train(model, optimizer, criterion, epochs, data_loader_train, vocab, data_lo
                 image, captions = image.to(device), captions.to(device)
                 outputs, attentions = model(image, captions)
                 targets = captions[:, 1:]
-                targets = targets.cpu()
-                outputs = outputs.cpu()
+                #targets = targets.cpu()
+                #outputs = outputs.cpu()
                 loss = criterion(outputs.view(-1, len(data_loader_train.dataset.vocab)), targets.reshape(-1))
                 #print(loss.item())
                 loss_test += loss.item()
