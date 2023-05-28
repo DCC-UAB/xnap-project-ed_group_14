@@ -40,9 +40,20 @@ def model_pipeline(cfg:dict) -> None:
         # access all HPs through wandb.config, so logging matches execution!
         wandb.define_metric('loss_train',step_metric='epoch')
         wandb.define_metric('loss_test',step_metric='epoch')
+
+        wandb.define_metric('bleu_train', step_metric='epoch')
+        wandb.define_metric('bleu_test', step_metric='epoch')
+
+        wandb.define_metric('perp_train', step_metric='epoch')
+        wandb.define_metric('perp_test', step_metric='epoch')
+
+        
+
         print('GENERATING DATASET')
         train_loader, test_loader, vocab = generate_dataset(cfg.get('batch_size'))
+        
         print('DATALOADER CREATED')
+
         model, criterion, optimizer = create_model(
             embed_size=cfg.get('embed_size'),
             attention_dim=cfg.get('attention_dim'),
@@ -54,8 +65,18 @@ def model_pipeline(cfg:dict) -> None:
 
         # and use them to train the model
         train(model, optimizer, criterion, cfg['epochs'], train_loader, vocab, test_loader)
-        save_model(model=model, num_epochs=cfg['epochs'], embed_size=300, attention_dim=256, encoder_dim=2048, decoder_dim=512, vocab_size=len(vocab))
-        predict(train_loader, model)
+        print('MAKING SOME PREDICTIONS')
+        predict(test_loader, model)
+        
+        print('SAVING MODEL')        
+        save_model(model=model, 
+                   num_epochs=cfg['epochs'], 
+                   embed_size=cfg.get('embed_size'), 
+                   attention_dim=cfg.get('attention_dim'), 
+                   encoder_dim=cfg.get('encoder_dim'), 
+                   decoder_dim=cfg.get('decoder_dim'), 
+                   vocab_size=len(vocab))
+        
         # and test its final performance
         #captions_reals, captions_predits, images_list = test(model, test_loader, )
 

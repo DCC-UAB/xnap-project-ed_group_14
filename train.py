@@ -2,45 +2,15 @@ from tqdm.auto import tqdm
 import torch
 import wandb
 from model import save_model
-#Only Raul
+# Metrics
+from torchtext.data.metrics import bleu_score
+from torchmetrics.text import Perplexity
+
+
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-#def train(model, loader, criterion, optimizer, config):
-#    # Tell wandb to watch what the model gets up to: gradients, weights, and more!
-#    wandb.watch(model, criterion, log="all", log_freq=10)
-#
-#    # Run training and track with wandb
-#    total_batches = len(loader) * config.epochs
-#    example_ct = 0  # number of examples seen
-#    batch_ct = 0
-#    for epoch in tqdm(range(config.epochs)):
-#        for _, (images, labels) in enumerate(loader):
-#
-#            loss = train_batch(images, labels, model, optimizer, criterion)
-#            example_ct +=  len(images)
-#            batch_ct += 1
-#
-#            # Report metrics every 25th batch
-#            if ((batch_ct + 1) % 25) == 0:
-#                train_log(loss, example_ct, epoch)
-#
-#
-#def train_batch(images, labels, model, optimizer, criterion, device="cuda"):
-#    images, labels = images.to(device), labels.to(device)
-#    
-#    # Forward pass ➡
-#    outputs = model(images)
-#    loss = criterion(outputs, labels)
-#    
-#    # Backward pass ⬅
-#    optimizer.zero_grad()
-#    loss.backward()
-#
-#    # Step with optimizer
-#    optimizer.step()
-#
-#    return loss
+
 
 
 def train_log(loss, example_ct, epoch):
@@ -49,7 +19,30 @@ def train_log(loss, example_ct, epoch):
     print(f"Loss after {str(example_ct).zfill(5)} examples: {loss:.3f}")
 
 
+def generate_predictions_sentences(model, image, targets, vocab):
+    predictions = []
+    # Calculate batch predictions
+    model.eval()
+    with torch.no_grad():
+        img = image.detach().clone()
+        features = model.encoder(img.to(device))
+        for f in features:
+            caps,_  = model.decoder.generate_caption(f.unsqueeze(0), vocab=vocab)
+            predictions.append(caps)
+    model.train()
+    
+    # Process real captions
+    real_captions = []
+    for t in targets:
+        real_cap = [vocab.itos[idx] if ('<' not in vocab.itos[idx] and vocab.itos[idx] != '<UNK>') or vocab.itos[idx] == '.' else '' for idx in t.cpu().numpy()]
+        real_caption = [real_cap[:real_cap.index('')]]
+        real_captions.append(real_caption)
+    return predictions, real_captions
+
 def train(model, optimizer, criterion, epochs, data_loader_train, vocab, data_loader_test):
+    
+    perp_score = Perplexity().to(device)
+
     #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print_every = 100
     wandb.watch(model, criterion, log='all', log_freq=10)
@@ -76,7 +69,22 @@ def train(model, optimizer, criterion, epochs, data_loader_train, vocab, data_lo
             if (idx+1)%print_every == 0:
                 print(f'Epoch{epoch}:  Loss{loss.item()}')
                 #wandb.log({'epoch':epoch, 'loss_batch_train': loss_epoch/len(data_loader_train.dataset)})
-                
+        
+        # TRAIN METRICS
+        dataiter = iter(data_loader_train)
+        image, captions = next(dataiter)
+        image, captions = image.to(device), captions.to(device)
+        
+        targets = captions[:, 1:]
+        predictions, captions = generate_predictions_sentences(model, image, targets, data_loader_train.dataset.vocab)
+
+        # BLEU
+        bleu_train = bleu_score(predictions, captions)
+        # Perplecxity
+        shortest_sentence = min(targets.shape[1], outputs.shape[1])
+        shortest_batch = min(targets.shape[0], outputs.shape[0])
+        perp_train = perp_score(outputs[:shortest_batch, :shortest_sentence, :], targets[:shortest_batch, :shortest_sentence]).item()
+
         
         model.eval()
         print('STARTING TEST\n')
@@ -85,12 +93,28 @@ def train(model, optimizer, criterion, epochs, data_loader_train, vocab, data_lo
                 image, captions = image.to(device), captions.to(device)
                 outputs, attentions = model(image, captions)
                 targets = captions[:, 1:]
-                targets = targets.cpu()
-                outputs = outputs.cpu()
+                #targets = targets.cpu()
+                #outputs = outputs.cpu()
                 loss = criterion(outputs.view(-1, len(data_loader_train.dataset.vocab)), targets.reshape(-1))
                 #print(loss.item())
                 loss_test += loss.item()
                 #print(loss_epoch)
+            
+            # Metrics
+            dataiter = iter(data_loader_test)
+            image, captions = next(dataiter)
+            image, captions = image.to(device), captions.to(device)
+
+            targets = captions[:, 1:]
+            predictions, captions = generate_predictions_sentences(model, image, targets, data_loader_train.dataset.vocab)
+
+            # BLEU
+            bleu_test = bleu_score(predictions, captions)
+
+            # Perplexity
+            shortest_sentence = min(targets.shape[1], outputs.shape[1])
+            shortest_batch = min(targets.shape[0], outputs.shape[0])
+            perp_test = perp_score(outputs[:shortest_batch, :shortest_sentence, :], targets[:shortest_batch, :shortest_sentence]).item()
                 
 
 
@@ -100,7 +124,11 @@ def train(model, optimizer, criterion, epochs, data_loader_train, vocab, data_lo
         #wandb.log({"total_loss": loss_epoch})
         wandb.log({'epoch':epoch, 'loss_train': loss_epoch/len(data_loader_train)})
         wandb.log({'epoch':epoch, 'loss_test': loss_test/len(data_loader_test)})
-    
-    save_model(model,epoch)
+        
+        wandb.log({'train_bleu': bleu_train / (len(data_loader_train))}) 
+        wandb.log({'test_bleu': bleu_test / (len(data_loader_test))}) 
+        wandb.log({'perp_train':perp_train})
+        wandb.log({'perp_test':perp_test})
+   
 
     print('EPOCHS FINISHED')
