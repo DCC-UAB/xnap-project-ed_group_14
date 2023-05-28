@@ -58,7 +58,7 @@ def model_pipeline(cfg:dict) -> None:
         # and use them to train the model
         train(model, optimizer, criterion, cfg['epochs'], train_loader, vocab, test_loader)
         print('MAKING SOME PREDICTIONS')
-        predict(train_loader, model)
+        predict(test_loader, model)
         
         print('SAVING MODEL')        
         save_model(model=model, 
