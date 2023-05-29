@@ -20,7 +20,7 @@ def save_predictions(preds, cap):
             escritor_csv.writerow([r,p])
             
 
-def predict(data_loader, model):
+def predict(data_loader, model, vocab):
     #show any 1
     #dataiter = iter(data_loader)
     #images, caption = next(dataiter)
@@ -36,7 +36,7 @@ def predict(data_loader, model):
         print('REAL CAPTION:  ', r)
         img = images[0].detach().clone()
         #img1 = images[0].detach().clone()
-        caps,alphas = get_caps_from(img.unsqueeze(0), model, data_loader.dataset.vocab)
+        caps,alphas = get_caps_from(img.unsqueeze(0), model, vocab)
         print('PREDICTED CAPTION: ', caps)
         preds.append(caps)
         #plot_attention(img, caps, alphas)

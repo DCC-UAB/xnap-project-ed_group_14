@@ -41,8 +41,8 @@ def model_pipeline(cfg:dict) -> None:
         wandb.define_metric('loss_train',step_metric='epoch')
         wandb.define_metric('loss_test',step_metric='epoch')
 
-        wandb.define_metric('bleu_train', step_metric='epoch')
-        wandb.define_metric('bleu_test', step_metric='epoch')
+        wandb.define_metric('trai_bleu', step_metric='epoch')
+        wandb.define_metric('test_bleu', step_metric='epoch')
 
         wandb.define_metric('perp_train', step_metric='epoch')
         wandb.define_metric('perp_test', step_metric='epoch')
@@ -66,7 +66,7 @@ def model_pipeline(cfg:dict) -> None:
         # and use them to train the model
         train(model, optimizer, criterion, cfg['epochs'], train_loader, vocab, test_loader)
         print('MAKING SOME PREDICTIONS')
-        predict(test_loader, model)
+        predict(test_loader, model, train_loader.dataset.vocab)
         
         print('SAVING MODEL')        
         save_model(model=model, 
@@ -75,7 +75,8 @@ def model_pipeline(cfg:dict) -> None:
                    attention_dim=cfg.get('attention_dim'), 
                    encoder_dim=cfg.get('encoder_dim'), 
                    decoder_dim=cfg.get('decoder_dim'), 
-                   vocab_size=len(vocab))
+                   vocab_size=len(vocab),
+                   name=cfg.get('execution_name'))
         
         # and test its final performance
         #captions_reals, captions_predits, images_list = test(model, test_loader, )
@@ -88,14 +89,14 @@ def model_pipeline(cfg:dict) -> None:
 if __name__ == "__main__":
     
     config = {
-        'embed_size': 300,
-        'attention_dim': 256,
-        'encoder_dim': 2048,
-        'decoder_dim': 512,
-        'learning_rate': 0.01,
-        'epochs': 20,
+        'embed_size': 1024,
+        'attention_dim': 1024,
+        'encoder_dim': 4096,
+        'decoder_dim': 1024,
+        'learning_rate': 3e-4,
+        'epochs': 15,
         'batch_size':256,
-        'execution_name':'execution-test-azure-lr-0.01'
+        'execution_name':'azure-max-values'
     }
 
     create_split()
