@@ -66,7 +66,7 @@ def model_pipeline(cfg:dict) -> None:
         # and use them to train the model
         train(model, optimizer, criterion, cfg['epochs'], train_loader, vocab, test_loader)
         print('MAKING SOME PREDICTIONS')
-        predict(test_loader, model, train_loader.dataset.vocab)
+        predict(test_loader, model, train_loader.dataset.vocab, cfg.get('execution_name'))
         
         print('SAVING MODEL')        
         save_model(model=model, 
@@ -91,12 +91,12 @@ if __name__ == "__main__":
     config = {
         'embed_size': 1024,
         'attention_dim': 1024,
-        'encoder_dim': 4096,
+        'encoder_dim': 2048,
         'decoder_dim': 1024,
         'learning_rate': 3e-4,
         'epochs': 15,
-        'batch_size':256,
-        'execution_name':'azure-max-values'
+        'batch_size':128,
+        'execution_name':'azure-1024*2-2048-1024-iwth-metrics'
     }
 
     create_split()
