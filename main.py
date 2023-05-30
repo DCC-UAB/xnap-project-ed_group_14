@@ -97,7 +97,7 @@ if __name__ == "__main__":
         'learning_rate': 3e-4,
         'epochs': 15,
         'batch_size':128,
-        'execution_name':'azure-1024*2-2048-1024-iwth-metrics',
+        'execution_name':'azure-1024*2-2048-1024-iwth-metrics-adadelta',
         'optimizer_type':'Adadelta',
     }
 

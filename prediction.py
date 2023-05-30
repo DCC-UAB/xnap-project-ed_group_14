@@ -13,14 +13,14 @@ def get_caps_from(features_tensors, model, vocab):
     
     return caption,alphas
 
-def save_predictions(preds, cap):
-    with open('results.csv', 'w', newline='') as file:
+def save_predictions(preds, cap, file_name):
+    with open(file_name+'.csv', 'w', newline='') as file:
         escritor_csv = csv.writer(file)
         for r, p in zip(cap,preds):
             escritor_csv.writerow([r,p])
             
 
-def predict(data_loader, model, vocab):
+def predict(data_loader, model, vocab, file_name):
     #show any 1
     #dataiter = iter(data_loader)
     #images, caption = next(dataiter)
@@ -42,4 +42,4 @@ def predict(data_loader, model, vocab):
         #plot_attention(img, caps, alphas)
         print('\n')
     
-    save_predictions(preds, real_caption)
+    save_predictions(preds, real_caption, file_name)
