@@ -60,7 +60,8 @@ def model_pipeline(cfg:dict) -> None:
             encoder_dim=cfg.get('encoder_dim'),
             decoder_dim=cfg.get('decoder_dim'),
             vocab = vocab,
-            learning_rate=cfg.get('learning_rate')
+            learning_rate=cfg.get('learning_rate'),
+            optimizer_type=cfg.get('optimizer_type')
         )
 
         # and use them to train the model
@@ -96,7 +97,8 @@ if __name__ == "__main__":
         'learning_rate': 3e-4,
         'epochs': 15,
         'batch_size':256,
-        'execution_name':'azure-max-values'
+        'execution_name':'azure-max-values',
+        'optimizer_type':'Adadelta',
     }
 
     create_split()

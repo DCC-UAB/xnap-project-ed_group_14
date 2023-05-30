@@ -191,7 +191,7 @@ class EncoderDecoder(nn.Module):
         outputs = self.decoder(features, captions)
         return outputs
 
-def create_model(embed_size, attention_dim, encoder_dim, decoder_dim, vocab, learning_rate):
+def create_model(embed_size, attention_dim, encoder_dim, decoder_dim, vocab, learning_rate, optimizer_type):
     model = EncoderDecoder(
         embed_size=embed_size,
         vocab_size = len(vocab),
@@ -201,7 +201,13 @@ def create_model(embed_size, attention_dim, encoder_dim, decoder_dim, vocab, lea
     ).to(device)
 
     criterion = nn.CrossEntropyLoss(ignore_index=vocab.stoi["<PAD>"])
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+    optimizer = None
+    if optimizer_type == 'Adam':
+        optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+    elif optimizer_type == 'Adadelta':
+        optimizer = optim.Adadelta(model.parameters(), lr=learning_rate, rho=0.95, eps=1e-07)
+    elif optimizer_type == 'Adagrad':
+        optimizer = optim.Adagrad(model.parameters(), lr=learning_rate, lr_decay=0, weight_decay=0, initial_accumulator_value=0.1, eps=1e-10)
 
     return model, criterion, optimizer
 
