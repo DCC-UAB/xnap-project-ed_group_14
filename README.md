@@ -8,6 +8,17 @@ Los [datos](https://www.kaggle.com/datasets/adityajn105/flickr8k) que se han uti
 
 ![Imagen Ejemplo con diferentes captions](src/Plot_Inicial-Corrected.jpg)
 
+Una vez descargados los datos mediante la interfaz de Kaggle, se ha procedido a realizar un split para tener un conjunto de train y otro de validación. De este modo, se ha realizado una separación 80/20, por lo que la estructura del dataset es la siguiente:
+
+|               | Imágenes | Captions |
+| ---------     | --------- | --------- |
+| Train         | 6473   | 32364   |
+| Validación    |  1619 | 8091   |
+| Total         | 8091   | 40455   |
+
+
+
+
 
 ## Entorno de ejecución
 Antes de ejecutar el código tienes que crear un entorno local con conda y activarlo. El archivo [environment.yml](https://github.com/DCC-UAB/XNAP-Project/environment.yml) tiene todas las dependencias necesarias. Ejecute el siguiente comando: ``conda env create -n NOMBREDEENTORNO --file environment.yml `` para crear un entorno conda con todas las dependencias requeridas y luego activarlo:
