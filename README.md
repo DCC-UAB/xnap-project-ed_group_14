@@ -1,8 +1,13 @@
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=11122265&assignment_repo_type=AssignmentRepo)
 # Image Captioning
-El objetivo de este proyecto es generar descripciones de imágenes con herramientas de deep learning.
+El objetivo de este proyecto es desarrollar un modelo Deep Learning que sea capaz de generar a partir de una imagen un texto que describa que esta pasando en esa imagen.
 
-Los [datos](https://www.kaggle.com/datasets/adityajn105/flickr8k) que se han utilziado para entrenar a la red neuronal consisten en 8.000 imagenes cada una pareada con 5 diferentes leyendas que proveen descripciones de las entidades y eventos de la imagen.
+## Dataset
+
+Los [datos](https://www.kaggle.com/datasets/adityajn105/flickr8k) que se han utilziado para desarrollar el proyecto provienen de la página web Kaggle. Dichos datos contienen alrededor de 8000 imágenes. Este dataset, a parte de las imágenes incluye «captions». En un archivo txt, se incluye por cada imágen entre 3 y 5 captions, que describen de manera sencilla que es lo que está sucediendo en la imágen. A continuación podemos ver algunos ejemplos:
+
+![Imagen Ejemplo con diferentes captions](src/Plot_Inicial-Corrected.jpg)
+
 
 ## Entorno de ejecución
 Antes de ejecutar el código tienes que crear un entorno local con conda y activarlo. El archivo [environment.yml](https://github.com/DCC-UAB/XNAP-Project/environment.yml) tiene todas las dependencias necesarias. Ejecute el siguiente comando: ``conda env create -n NOMBREDEENTORNO --file environment.yml `` para crear un entorno conda con todas las dependencias requeridas y luego activarlo:
