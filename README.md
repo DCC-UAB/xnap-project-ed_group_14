@@ -17,8 +17,10 @@ Una vez descargados los datos mediante la interfaz de Kaggle, se ha procedido a 
 | Total         | 8091   | 40455   |
 
 
-
-
+## Dataset preprocessing
+Tras haber separado en directorios las imagenes para realizar un train_test_split. Les aplicamos:
+Transformaciones de resizing, random crop y normalización. En primer lugar aplicamos un resizing, disminuyendo el tamaño de la imagen a 226. Después realizamos un random crop a 224. Una vez redimensionada la imagen la convertimos a tensor (convritiendo los valores de 0 a 1). Finalmente, aplicamos una normalización con valores predeterminados dados por el modelo base. 
+Una vez se han aplicado estas transformaciones a cada uno de las imágenes del dataloader, ya están aptas para ser transferidas al modelo.
 
 ## Entorno de ejecución
 Antes de ejecutar el código tienes que crear un entorno local con conda y activarlo. El archivo [environment.yml](https://github.com/DCC-UAB/XNAP-Project/environment.yml) tiene todas las dependencias necesarias. Ejecute el siguiente comando: ``conda env create -n NOMBREDEENTORNO --file environment.yml `` para crear un entorno conda con todas las dependencias requeridas y luego activarlo:
@@ -62,11 +64,6 @@ El modelo DecoderRNN es responsable de generar captions basados en las caracter�
 
 ![Imagen Predicha](src/Prediction.png)
 
-
-## Dataset preprocessing
-Tras haber separado en directorios las imagenes para realizar un train_test_split. Les aplicamos:
-Transformaciones de resizing, random crop y normalización.
-Tenemos pensado aplicar data augmentation
 
 ## Train
 Hasta el momento se han probado ejecuciones residuales, de comprobación de ejecución con diferentes metodos (para poder reconstruir maneras de evaluar el modelo, diferentes metricas, ...)
