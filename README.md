@@ -8,7 +8,7 @@ Los [datos](https://www.kaggle.com/datasets/adityajn105/flickr8k) que se han uti
 
 ![Imagen Ejemplo con diferentes captions](src/Plot_Inicial-Corrected.jpg)
 
-Una vez descargados los datos mediante la interfaz de Kaggle, se ha procedido a realizar un split para tener un conjunto de train y otro de validación. De este modo, se ha realizado una separación 80/20, por lo que la estructura del dataset es la siguiente:
+Una vez descargados los datos mediante la interfaz de Kaggle, se ha procedido a realizar un split para tener un conjunto de train y otro de validación. De este modo, se ha realizado una separación 80/20, la separación se ha hecho de las caption, por lo que la estructura del dataset es la siguiente:
 
 |               | Imágenes  | Captions  |
 | ---------     | --------- | --------- |
@@ -43,7 +43,7 @@ La arquitectura de nuestro modelo es la siguiente:
 
 ![Imagen Arquitectura del modelo](src/Model.png)
 
-En primer lugar, el funcionamiento del Encoder es el sigueinte:
+En primer lugar, el funcionamiento del Encoder es el siguiente:
 
 El modelo EncoderCNN se basa en la arquitectura de red neuronal convolucional ResNet-101 pre-entrenada. El propósito de este modelo es extraer características visuales significativas de las imágenes de entrada. 
 
@@ -66,7 +66,36 @@ El modelo DecoderRNN es responsable de generar captions basados en las caracter�
 
 
 ## Train
-Hasta el momento se han probado ejecuciones residuales, de comprobación de ejecución con diferentes metodos (para poder reconstruir maneras de evaluar el modelo, diferentes metricas, ...)
+En esta sección hablaremos sobre todo el proceso realizado en el train, explicaremos el proceso de entrenamiento, la arquitectura de este, validación y pruebas, así como los hiperparámetros utilizados durante del entrenamiento. Además, se explicará la funció de pérdida, optimización y métricas empleadas.
+
+### Proceso de entrenamiento
+Aqui explicar un par de cosa:
+1. como se entrena
+   1. Aqui podemos poner que usamos el 80% de las imagens para entrenar y que cuando acabamos 1 epoca, con el 20% restante hacemos una validacion para ver como esta aprendiendo el modelo
+2. que arquitectura seguimos para entrenar
+   1. una vez explicado el como funciona el proceso de entrenamiento, pues podemos adentrarnos a poner una pincellada de la arquitectura aunque se haya explicado anteriormente, pero no hace falta definir encoder ni decoder ya que se ha explicado.
+
+
+### Función de pérdida y optimización
+La función de loss utilizada es la de CrossEntropy, se intento probar la función de pérdida de divergencia KL (Kullback-Leibler), pero esta función de pérdida no tiene la propiedad de gradiente eficiente, esto significa que durante el entrenamiento esta propiedad facilita la propagación del error a través de las capas de la red neuronal, por lo que dificulta que se pueda optimizar. Por lo tanto, finalmente nos decidimos por la Crossentropy, ya que la Crossentropy es la más idonea para este tipo de problemas, debido a que podemos considerar cada palabra como una etiqueta de clasificación, eso nos permite que el modelo pueda predecir la siguiente palabra en función de la imagen de entrada y las palabras entradas anteriores. 
+
+La función de optimización inicial era Adam, Adam ya daba un resultado bueno, pero aún así quisimos probar diversos optimizadores para comprobar si era el mejor, o habia alguno que se adaptara mejor. Primero de todo usamos el optimizador SGD, ya que queriamos probar el hyperparámetreo Cyclic en Learning rate, y para ello era necesario un optimizador con momentum, el resultado de este no fue mejor que el de Adam y lo descartamos. Además de probar el SGD, probamos Adagrad y Adadelta, pero ninguno de los nos mejoró la ejecución inicial. Acontinuación enseñamos una gráficade train_loss que indicará todo lo que hemos explicado anteriormente.
+
+![Grafica Losses](src/loss_train.png)
+
+
+### Metricas de evaluación
+Para el proyecto se emplearon varias métricas para medir el rendimiento del modelo de image captioning. Algunas de las métricas utilizadas son: BLEU, Perplexity, ROUGE y coeficiente Jaccbard.
+De estas cuatro métricas mencionadas anteriormente, solo se hizo uso de dos en el train y una adicional en el test, la otra se descartó. Para el train usamos la BLEU y Perplexity:
+   - BLEU: Se empleó la métrica BLEU de Pytorch en el problema para evaluar la similitud entre las captions predichas por el modelo y las captions reales que proporciona el dataset. Esta métrica, compara los n-gramas que estan en los caption predichos con los reales. La formula para el cálculo de la BLEU és la siguiente: [PONER FOTO DE LA FORMULA DE BLEU]
+   - Perplexity: Se empleó la métrica Perplexity para evaluar la calidad de las captions predichas. Esta mértica se calcula mediante el cáculo de la probabilidad de las predichas del modelo y mide que tan bien el modelo puede llegar a predecir la siguiente caption, las siguiente palabras. La fórmula como tal, es la siguiente: [PONER FOTO DE LA FORMULA DE PERPLEXITY]
+
+Tal i como se ha mencionado anteriormente, se hizo uso de una métrica adicional en el test, esta métrica es el coefficiente de Jaccbard:
+   - Coeficiente de Jaccbard: El coeficiente de jaccbar calcula la similitud entre dos conjuntos, dividiendo la longitud de la intersección por la unión de estos.
+
+{AQUI TENEMOS QUE PONER QUE TODAS LAS METRICAS NOS HAN DADO MAL??? O ESTO VA EN RESULTADOS??}
+
+### Diferentes Pruebas
 
 Teniendo en cuenta que los hyperparametros base han sido los siguientes:
 
@@ -86,9 +115,21 @@ Adicionalmente se han probado diferentes configuraciones:
 - Embbedding size
 - Optimizers: SGD, ADAGRAD, ADADELTA
 - Learning rate: 0.1, 0.01, CyclicLR, LambdaLR
+  
+### Tiempo de entrenamiento y recursos
+Aqui yo pondria que dura cada epoca, que recursos usamos, podriamos poner alguna fotito de Wanb ya q estos tienen graficas viendo el rendimiento del problema, pero sino este punto se puede eliminar
+
+
+
+
 
 ## Results
-Results
+Aqui podemos poner los resultados de las losses y metricas del modelo que consideramos mejor, algunas predicciones con el validation y por ultimo explicar que hemos utlizado unas fotos nuestras para predecir.
+
+Podemos poner possibles mejoras si quereis
+
+## Referencias
+Poner algunas referencias 
 
 ![Imagen Predicha](src/aaa_prediction.png)
 
