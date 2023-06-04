@@ -85,8 +85,13 @@ La función de optimización inicial era Adam, Adam ya daba un resultado bueno, 
 ### Metricas de evaluación
 Para el proyecto se emplearon varias métricas para medir el rendimiento del modelo de image captioning. Algunas de las métricas utilizadas son: BLEU, Perplexity, ROUGE y coeficiente Jaccbard.
 De estas cuatro métricas mencionadas anteriormente, solo se hizo uso de dos en el train y una adicional en el test, la otra se descartó. Para el train se ueó la BLEU y Perplexity:
-   - BLEU: Se empleó la métrica BLEU de Pytorch en el problema, para evaluar la similitud entre las captions predichas por el modelo y las captions reales que proporciona el dataset. Esta métrica, compara los n-gramas que están en los caption predichos con los reales. La fórmula para el cálculo de la BLEU és la siguiente: [PONER FOTO DE LA FORMULA DE BLEU]
-   - Perplexity: Se empleó la métrica Perplexity para evaluar la calidad de las captions predichas. Esta métrica se calcula mediante el cáculo de la probabilidad de las captions predichas del modelo, y mide que tan bien el modelo puede llegar a predecir las siguiente palabras. La fórmula como tal, es la siguiente: [PONER FOTO DE LA FORMULA DE PERPLEXITY]
+   - BLEU: Se empleó la métrica BLEU de Pytorch en el problema, para evaluar la similitud entre las captions predichas por el modelo y las captions reales que proporciona el dataset. Esta métrica, compara los n-gramas que están en los caption predichos con los reales. La fórmula para el cálculo de la BLEU és la siguiente: 
+   
+        ![bleu formula](src/bleu_formula.png)
+
+   - Perplexity: Se empleó la métrica Perplexity para evaluar la calidad de las captions predichas. Esta métrica se calcula mediante el cáculo de la probabilidad de las captions predichas del modelo, y mide que tan bien el modelo puede llegar a predecir las siguiente palabras. La fórmula como tal, es la siguiente:
+
+        ![perp formula](src/perp_formula.png)
 
 Tal i como se ha mencionado anteriormente, se hizo uso de una métrica adicional en el test, esta métrica es el coefficiente de Jaccbard:
    - Coeficiente de Jaccbard: El coeficiente de jaccbar calcula la similitud entre dos conjuntos, dividiendo la longitud de la intersección por la unión de estos.
@@ -137,11 +142,17 @@ Por tanto, con todo lo que se ha explicado anteriormente, los hyperparámetros e
 - Learning rate: 0.0003
 
 ### Tiempo de entrenamiento y recursos
-Aqui yo pondria que dura cada epoca, que recursos usamos, podriamos poner alguna fotito de Wanb ya q estos tienen graficas viendo el rendimiento del problema, pero sino este punto se puede eliminar
 
+Se ha cogido el modelo anteriormente explicado y el rendimiento de este durante el entrenamiento con el siguiente hardware ha sido:
 
+Hardware:
+- CPU count: 6
+- GPU count: 1
+- GPU type:  Tesla M60
 
+![GPU usage](src/wandb_gpu_usage.png)
 
+![CPU usage](src/wandb_cpu_usage.png)
 
 ## Results
 
