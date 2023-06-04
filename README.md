@@ -66,15 +66,7 @@ El modelo DecoderRNN es responsable de generar captions basados en las caracter�
 
 
 ## Train
-En esta sección se hablará sobre todo el proceso realizado en el train, se explicará el proceso de entrenamiento, la arquitectura de este, validación y pruebas, así como los hiperparámetros utilizados durante el entrenamiento. Además, se explicará la funció de pérdida, optimización y métricas empleadas.
-
-### Proceso de entrenamiento
-Aqui explicar un par de cosa:
-1. como se entrena
-   1. Aqui podemos poner que usamos el 80% de las imagens para entrenar y que cuando acabamos 1 epoca, con el 20% restante hacemos una validacion para ver como esta aprendiendo el modelo
-2. que arquitectura seguimos para entrenar
-   1. una vez explicado el como funciona el proceso de entrenamiento, pues podemos adentrarnos a poner una pincellada de la arquitectura aunque se haya explicado anteriormente, pero no hace falta definir encoder ni decoder ya que se ha explicado.
-
+En esta sección se hablará de las diferentes pruebas realizadas en el train, de los diferentes canvios realizados para hacer que el modelo sea capaz de entrenar correctamente y por lo tanto capaz de predecir las imágenes del test.
 
 ### Función de pérdida y optimización
 La función de loss utilizada es la de CrossEntropy, se intentó probar la función de pérdida de divergencia KL (Kullback-Leibler), pero esta función de pérdida no tiene la propiedad de gradiente eficiente, esto significa que durante el entrenamiento esta propiedad facilita la propagación del error a través de las capas de la red neuronal, por lo que dificulta que se pueda optimizar. Por lo tanto, finalmente se decidió usar la Crossentropy, ya que la Crossentropy es la más idonea para este tipo de problemas, debido a que se puede considerar cada palabra como una etiqueta de clasificación, eso permite que el modelo pueda predecir la siguiente palabra en función de la imagen de entrada y las palabras anteriores. 
@@ -188,7 +180,21 @@ Aqui podemos poner los resultados de las losses y metricas del modelo que consid
 Podemos poner possibles mejoras si quereis
 
 ## Referencias
-Poner algunas referencias 
+Algunas de las referencias utilizadas en este trabajo han sido:
+- Dataset:
+  - [Dataset](https://www.kaggle.com/datasets/adityajn105/flickr8k)
+- Start Point:
+  - [Code](https://www.kaggle.com/code/mdteach/image-captioning-with-attention-pytorch)
+- Optimizadores:
+  - [Adam](https://medium.com/ai%C2%B3-theory-practice-business/adam-optimization-algorithm-in-deep-learning-9b775dacbc9f)
+  - [SGD](https://towardsdatascience.com/stochastic-gradient-descent-clearly-explained-53d239905d31)
+  - [Adagrad](https://towardsdatascience.com/deep-learning-optimizers-436171c9e23f)
+  - [Adadelta](https://optimization.cbe.cornell.edu/index.php?title=AdaGrad)
+  - [Diferencia entre Adadelta Adagrad y Adam](https://www.i2tutorials.com/what-is-the-difference-between-adagrad-adadelta-and-adam/)
+- Métricas:
+  - [BLEU](https://pytorch.org/ignite/generated/ignite.metrics.Bleu.html)
+  - [Perplexity](https://pytorch.org/torcheval/main/generated/torcheval.metrics.Perplexity.html)
+  - [Coeficiente Jaccbard](https://people.revoledu.com/kardi/tutorial/Similarity/Jaccard.html)
 
 ## Contributors
 
