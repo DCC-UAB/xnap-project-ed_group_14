@@ -66,7 +66,7 @@ El modelo DecoderRNN es responsable de generar captions basados en las caracter�
 
 
 ## Train
-En esta sección hablaremos sobre todo el proceso realizado en el train, explicaremos el proceso de entrenamiento, la arquitectura de este, validación y pruebas, así como los hiperparámetros utilizados durante del entrenamiento. Además, se explicará la funció de pérdida, optimización y métricas empleadas.
+En esta sección se hablará sobre todo el proceso realizado en el train, se explicará el proceso de entrenamiento, la arquitectura de este, validación y pruebas, así como los hiperparámetros utilizados durante el entrenamiento. Además, se explicará la funció de pérdida, optimización y métricas empleadas.
 
 ### Proceso de entrenamiento
 Aqui explicar un par de cosa:
@@ -77,45 +77,65 @@ Aqui explicar un par de cosa:
 
 
 ### Función de pérdida y optimización
-La función de loss utilizada es la de CrossEntropy, se intento probar la función de pérdida de divergencia KL (Kullback-Leibler), pero esta función de pérdida no tiene la propiedad de gradiente eficiente, esto significa que durante el entrenamiento esta propiedad facilita la propagación del error a través de las capas de la red neuronal, por lo que dificulta que se pueda optimizar. Por lo tanto, finalmente nos decidimos por la Crossentropy, ya que la Crossentropy es la más idonea para este tipo de problemas, debido a que podemos considerar cada palabra como una etiqueta de clasificación, eso nos permite que el modelo pueda predecir la siguiente palabra en función de la imagen de entrada y las palabras entradas anteriores. 
+La función de loss utilizada es la de CrossEntropy, se intentó probar la función de pérdida de divergencia KL (Kullback-Leibler), pero esta función de pérdida no tiene la propiedad de gradiente eficiente, esto significa que durante el entrenamiento esta propiedad facilita la propagación del error a través de las capas de la red neuronal, por lo que dificulta que se pueda optimizar. Por lo tanto, finalmente se decidió usar la Crossentropy, ya que la Crossentropy es la más idonea para este tipo de problemas, debido a que se puede considerar cada palabra como una etiqueta de clasificación, eso permite que el modelo pueda predecir la siguiente palabra en función de la imagen de entrada y las palabras anteriores. 
 
-La función de optimización inicial era Adam, Adam ya daba un resultado bueno, pero aún así quisimos probar diversos optimizadores para comprobar si era el mejor, o habia alguno que se adaptara mejor. Primero de todo usamos el optimizador SGD, ya que queriamos probar el hyperparámetreo Cyclic en Learning rate, y para ello era necesario un optimizador con momentum, el resultado de este no fue mejor que el de Adam y lo descartamos. Además de probar el SGD, probamos Adagrad y Adadelta, pero ninguno de los nos mejoró la ejecución inicial. Acontinuación enseñamos una gráficade train_loss que indicará todo lo que hemos explicado anteriormente.
-
-![Grafica Losses](src/loss_train.png)
+La función de optimización inicial era Adam, Adam ya daba un resultado bueno, pero aún así se quiso probar diversos optimizadores para comprobar si era el mejor, o habia alguno que se adaptara mejor. Primero de todo se usó el optimizador SGD, debido a que se queria probar el hyperparámtero Cyclic en Learning rate, y para ello era necesario un optimizador con momentum,pero el resultado de este no fue mejor que el de Adam y se descartó. Además de probar el SGD, se probó Adagrad y Adadelta, pero ninguno de los mejoró la ejecución inicial.
 
 
 ### Metricas de evaluación
 Para el proyecto se emplearon varias métricas para medir el rendimiento del modelo de image captioning. Algunas de las métricas utilizadas son: BLEU, Perplexity, ROUGE y coeficiente Jaccbard.
-De estas cuatro métricas mencionadas anteriormente, solo se hizo uso de dos en el train y una adicional en el test, la otra se descartó. Para el train usamos la BLEU y Perplexity:
-   - BLEU: Se empleó la métrica BLEU de Pytorch en el problema para evaluar la similitud entre las captions predichas por el modelo y las captions reales que proporciona el dataset. Esta métrica, compara los n-gramas que estan en los caption predichos con los reales. La formula para el cálculo de la BLEU és la siguiente: [PONER FOTO DE LA FORMULA DE BLEU]
-   - Perplexity: Se empleó la métrica Perplexity para evaluar la calidad de las captions predichas. Esta mértica se calcula mediante el cáculo de la probabilidad de las predichas del modelo y mide que tan bien el modelo puede llegar a predecir la siguiente caption, las siguiente palabras. La fórmula como tal, es la siguiente: [PONER FOTO DE LA FORMULA DE PERPLEXITY]
+De estas cuatro métricas mencionadas anteriormente, solo se hizo uso de dos en el train y una adicional en el test, la otra se descartó. Para el train se ueó la BLEU y Perplexity:
+   - BLEU: Se empleó la métrica BLEU de Pytorch en el problema, para evaluar la similitud entre las captions predichas por el modelo y las captions reales que proporciona el dataset. Esta métrica, compara los n-gramas que están en los caption predichos con los reales. La fórmula para el cálculo de la BLEU és la siguiente: [PONER FOTO DE LA FORMULA DE BLEU]
+   - Perplexity: Se empleó la métrica Perplexity para evaluar la calidad de las captions predichas. Esta métrica se calcula mediante el cáculo de la probabilidad de las captions predichas del modelo, y mide que tan bien el modelo puede llegar a predecir las siguiente palabras. La fórmula como tal, es la siguiente: [PONER FOTO DE LA FORMULA DE PERPLEXITY]
 
 Tal i como se ha mencionado anteriormente, se hizo uso de una métrica adicional en el test, esta métrica es el coefficiente de Jaccbard:
    - Coeficiente de Jaccbard: El coeficiente de jaccbar calcula la similitud entre dos conjuntos, dividiendo la longitud de la intersección por la unión de estos.
 
 {AQUI TENEMOS QUE PONER QUE TODAS LAS METRICAS NOS HAN DADO MAL??? O ESTO VA EN RESULTADOS??}
 
-### Diferentes Pruebas
+### Hyperparámetros
 
 Teniendo en cuenta que los hyperparametros base han sido los siguientes:
 
 - Encoder: Resnet50
 - Encoder dimension: 2048
 - Attention dimension: 256
-- Decoder dimension: 512
 - Embedding size: 300
+- LSTM dimension: 512
+- Learning rate: 0.0003
+- Optimizer: Adam
+- Loss: CrossEntropyLoss
+
+
+Adicionalmente se han probado diferentes configuraciones:
+- Resnet50/101
+- Embbedding size
+- Attention dimension
+- LSTM dimension
+- Learning rate: 0.1, 0.01, CyclicLR, LambdaLR
+
+El código, inicialmente venia con la resnet50, pero se quiso probar el modelo resnet101, ya que se pensaba que al haber más capas, el modelo ajustaria mejor los pesos iniciales y de esta forma mejoraría la predicción, pero resultó que la mejoria no era tan significante como para canviar el modelo, y además el tiempo de ejecución augmentaba significativamente respecto al de resnet50, estas dos cosas llevaron a la reflexión de que el modelo resnet50 era suficientemente bueno para el proyecto.
+
+Embbedding size es un parámetro que se usa para representar palabras o letras en un espacio vectorial. Al augmentarlo puede mejorar la representació debido a que permite capturar mas información en los vectores. Y eso ocurrió, se agumentó el embbeding size de 300 a 1024, cosa que propició una mejora en el modelo, debido a que al augmentarlo se capturaron mas detalles y por tanto llevo a una comprensión mas detallada del lenguaje. 
+
+Cuando se habla de attention size se refiere al tamaño de los vectores de atención utilizados. Se utiliza para asignar pesos a diferentes partes de una secuencia de entrada, en este caso, el output del encoder de la imagen. Para ver si el resultado se podía mejorar, se augmentó este, el attention size tiene unas características muy similares al embedding size, por la qual cosa al agumentarlo ocurre lo mismo que con el embbedding size, es capaz de captar mas detalle de lo que le entra.
+
+El LSTM size es el mismo que el decoder size, y este se comporta de la misma manera que los dos anteriores, pero al augmentalo puede tener una complejidad mayor y requerir mas recursos de cómputo, por la qual cosa no mejoraba significativamente el modelo y se obtó por no modificar el tamaño.
+
+
+El learning rate ha sido el hyperparámetro que mas se ha modificado para ver si habia mejoria o no, se disminuyó, se augmentó e incluso se hizo un learning rate schedule. Con todas las prubas realizadas, se llegó a una conclusión, que el mejor learning rate para el modelo, era el que venia por defector, debido que al augmentarlo overfitteaba, al disminuirlo, no mejoraba al que ya teníamos y al hacer el schedule, se intentaba adaptar al maximo a los datos, que al final no aprendia nada y underfitteaba.
+
+Por tanto, con todo lo que se ha explicado anteriormente, los hyperparámetros escojidos para hacer el mejor modelo posible han sido:
+
+- Encoder: Resnet50
+- Encoder dimension: 2048
+- Attention dimension: 1024
+- Embedding size: 1024
 - LSTM dimension: 512
 - Optimizer: Adam
 - Loss: CrossEntropyLoss
 - Learning rate: 0.0003
 
-Adicionalmente se han probado diferentes configuraciones:
-- Resnet50/101
-- LSTM dimension
-- Embbedding size
-- Optimizers: SGD, ADAGRAD, ADADELTA
-- Learning rate: 0.1, 0.01, CyclicLR, LambdaLR
-  
 ### Tiempo de entrenamiento y recursos
 Aqui yo pondria que dura cada epoca, que recursos usamos, podriamos poner alguna fotito de Wanb ya q estos tienen graficas viendo el rendimiento del problema, pero sino este punto se puede eliminar
 
