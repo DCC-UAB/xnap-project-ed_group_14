@@ -90,6 +90,8 @@ Adicionalmente se han probado diferentes configuraciones:
 ## Results
 Results
 
+![Imagen Predicha](src/aaa_prediction.png)
+
 
 ## Contributors
 
