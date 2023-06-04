@@ -208,6 +208,12 @@ Adicionalmente, se ha comprobado el rendimiento del segundo modelo con imagenes 
 
 ## Possibles mejoras
 
+Como posibles mejoras de este proyecto se han observado las siguientes opciones:
+- Probar otros modelos pre-entrenados para el Encoder.
+- Utilizar N-grama diferente en el calculo BLEU.
+- Añadir como métricas ROUGE y CLIP Score.
+- Aplicar Data Augmentation a las imágenes.
+
 ## Referencias
 Algunas de las referencias utilizadas en este trabajo han sido:
 - Dataset:
