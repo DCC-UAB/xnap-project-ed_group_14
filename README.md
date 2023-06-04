@@ -77,8 +77,13 @@ La función de optimización inicial era Adam, Adam ya daba un resultado bueno, 
 ### Metricas de evaluación
 Para el proyecto se emplearon varias métricas para medir el rendimiento del modelo de image captioning. Algunas de las métricas utilizadas son: BLEU, Perplexity, ROUGE y coeficiente Jaccbard.
 De estas cuatro métricas mencionadas anteriormente, solo se hizo uso de dos en el train y una adicional en el test, la otra se descartó. Para el train se ueó la BLEU y Perplexity:
-   - BLEU: Se empleó la métrica BLEU de Pytorch en el problema, para evaluar la similitud entre las captions predichas por el modelo y las captions reales que proporciona el dataset. Esta métrica, compara los n-gramas que están en los caption predichos con los reales. La fórmula para el cálculo de la BLEU és la siguiente: [PONER FOTO DE LA FORMULA DE BLEU]
-   - Perplexity: Se empleó la métrica Perplexity para evaluar la calidad de las captions predichas. Esta métrica se calcula mediante el cáculo de la probabilidad de las captions predichas del modelo, y mide que tan bien el modelo puede llegar a predecir las siguiente palabras. La fórmula como tal, es la siguiente: [PONER FOTO DE LA FORMULA DE PERPLEXITY]
+   - BLEU: Se empleó la métrica BLEU de Pytorch en el problema, para evaluar la similitud entre las captions predichas por el modelo y las captions reales que proporciona el dataset. Esta métrica, compara los n-gramas que están en los caption predichos con los reales. La fórmula para el cálculo de la BLEU és la siguiente: 
+   
+        ![bleu formula](src/bleu_formula.png)
+
+   - Perplexity: Se empleó la métrica Perplexity para evaluar la calidad de las captions predichas. Esta métrica se calcula mediante el cáculo de la probabilidad de las captions predichas del modelo, y mide que tan bien el modelo puede llegar a predecir las siguiente palabras. La fórmula como tal, es la siguiente:
+
+        ![perp formula](src/perp_formula.png)
 
 Tal i como se ha mencionado anteriormente, se hizo uso de una métrica adicional en el test, esta métrica es el coefficiente de Jaccbard:
    - Coeficiente de Jaccbard: El coeficiente de jaccbar calcula la similitud entre dos conjuntos, dividiendo la longitud de la intersección por la unión de estos.
@@ -129,17 +134,24 @@ Por tanto, con todo lo que se ha explicado anteriormente, los hyperparámetros e
 - Learning rate: 0.0003
 
 ### Tiempo de entrenamiento y recursos
-Aqui yo pondria que dura cada epoca, que recursos usamos, podriamos poner alguna fotito de Wanb ya q estos tienen graficas viendo el rendimiento del problema, pero sino este punto se puede eliminar
 
+Se ha cogido el modelo anteriormente explicado y el rendimiento de este durante el entrenamiento con el siguiente hardware ha sido:
 
+Hardware:
+- CPU count: 6
+- GPU count: 1
+- GPU type:  Tesla M60
 
+![GPU usage](src/wandb_gpu_usage.png)
 
+![CPU usage](src/wandb_cpu_usage.png)
 
 ## Results
 
-Despues de las varias pruebas explicadas anteriormente estos son los resultados capturados con [wandb](https://wandb.ai/xn14/caption):
+Después de las varias pruebas explicadas anteriormente estos son los resultados capturados con [wandb](https://wandb.ai/xn14/caption).
 
 ### Loss
+Los resultados obtenidos de entrenamiento y validación de los diferentes modelos observando la loss:
 
 ![Loss Train](src/result_loss_train.png)
 
@@ -150,16 +162,26 @@ Se puede observar que todos los modelos en la curva de entrenamiento siguen el m
 Sin embargo, los modelos siguen una naturaleza completamente contradictoria respecto a la validación. Casi todos los modelos tienen una loss ascendiente excepto un par, como por ejemplo el marcado en verde con CyclicLR y resnet50.
 
 ### BLEU
+Estas son las observaciones del entrenamiento y validación de los diferentes modelos sobre la BLEU score:
 
-![Loss Train](src/result_bleu_train.png)
+![BLEU Train](src/result_bleu_train.png)
 
-![Loss Train](src/result_bleu_validation.png)
+![BLEU Train](src/result_bleu_validation.png)
 
 Por lo que respecta a los resultados de BLEU, se han obtenido unos resultados tan bajos debido a que la BLEU se ha calculado con 4-grama (el predeterminado en pytorch). 
 
 Se observa que en entrenamiento todos los modelos siguen una serie ascendente, algunos tardan más en empezar como es el caso del morado. En referencia a las observaciones vista en la loss de entrenamiento, el modelo con embedding size de 1024 y el attention dimension de 1024 marcado en rojo, ha obtenido 0.08 de forma rápida y progresiva a diferencia del resto como puede ser el amarillo que es menos inestable variando de 0.06 a 0.078 de forma muy sucesiva entre epochs. Finalmente se mostrarán predicciones generadas con 15 epochs que ha sido entrenado dicho modelo marcado en rojo.
 
 La BLEU en validación en ninguno de los modelos asciende de 0, esto puede ser por falta de tiempo de entrenamiento, que ya en entrenamiento estamos hablando de hasta 20 epochs y una BLUE inferios a 0.1. Hay que recordar que calculando un BLEU con 4-grama dificulta un buen resutlado en validación.
+
+### Perplexity
+Como ya se ha explicado la función y el calculo de la perplexity, estos son los resultados del entrenamiento y validación de los diferentes modelos:
+
+![Perplexity Train](src/result_perp_train.png)
+
+![Perplexity Train](src/result_perp_validation.png)
+
+La métrica de Perplexity para entrenamiento y validación no deja de ascender para todos los modelos probados, esto es debido a que cuando los modelos comienzan a ver más datos las probabilidades calculadas para la perplexity disminuyen, aumentando la score final.
 
 ### Prediccions
 Predicciones con los dos modelos que mejor loss han obtenido:
@@ -174,10 +196,17 @@ Modelo: embed_size=1024,attention_dim=1024
 
 ![Dog Prediciton 2](src/dog_prediction2.png)
 
+Como observación el segundo modelo sigue la misma estructura de 'a' 'dog' 'running' 'on place'.
 
-Aqui podemos poner los resultados de las losses y metricas del modelo que consideramos mejor, algunas predicciones con el validation y por ultimo explicar que hemos utlizado unas fotos nuestras para predecir.
+### Test
 
-Podemos poner possibles mejoras si quereis
+Adicionalmente, se ha comprobado el rendimiento del segundo modelo con imagenes propias:
+
+![Test 1](src/test1.png)
+
+![Test 2](src/test2.png)
+
+## Possibles mejoras
 
 ## Referencias
 Algunas de las referencias utilizadas en este trabajo han sido:
