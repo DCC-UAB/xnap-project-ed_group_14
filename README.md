@@ -10,11 +10,11 @@ Los [datos](https://www.kaggle.com/datasets/adityajn105/flickr8k) que se han uti
 
 Una vez descargados los datos mediante la interfaz de Kaggle, se ha procedido a realizar un split para tener un conjunto de train y otro de validación. De este modo, se ha realizado una separación 80/20, por lo que la estructura del dataset es la siguiente:
 
-|               | Imágenes | Captions |
+|               | Imágenes  | Captions  |
 | ---------     | --------- | --------- |
-| Train         | 6473   | 32364   |
-| Validación    |  1619 | 8091   |
-| Total         | 8091   | 40455   |
+| Train         | 6473      | 32364     |
+| Validación    |  1619     | 8091      |
+| Total         | 8091      | 40455     |
 
 
 ## Dataset preprocessing
@@ -25,13 +25,13 @@ Una vez se han aplicado estas transformaciones a cada uno de las imágenes del d
 ## Entorno de ejecución
 Antes de ejecutar el código tienes que crear un entorno local con conda y activarlo. El archivo [environment.yml](https://github.com/DCC-UAB/XNAP-Project/environment.yml) tiene todas las dependencias necesarias. Ejecute el siguiente comando: ``conda env create -n NOMBREDEENTORNO --file environment.yml `` para crear un entorno conda con todas las dependencias requeridas y luego activarlo:
 ```shell
-foo@bar:~$ conda env create -n ENVNAME --file environment.yml
-foo@bar:~$ conda activate ENVNAME
+conda env create -n ENVNAME --file environment.yml
+conda activate ENVNAME
 ```
 
 To run the example code:
 ```shell
-foo@bar:~$ python main.py
+python main.py
 ```
 ## Arquitectura
 La arquitectura de nuestro modelo es la siguiente:
@@ -71,8 +71,8 @@ Hasta el momento se han probado ejecuciones residuales, de comprobación de ejec
 ## Results
 Results
 
+
 ## Contributors
-Write here the name and UAB mail of the group members
 
 - Eric Alcaraz del Pico- 1603504@uab.cat
 - Raül Yusef Dalgamoni Alonso - 1599225@uab.cat
