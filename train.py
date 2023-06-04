@@ -9,10 +9,6 @@ from torchmetrics.text import Perplexity
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-
-
-
-
 def train_log(loss, example_ct, epoch):
     # Where the magic happens
     wandb.log({"epoch": epoch, "loss": loss}, step=example_ct)
