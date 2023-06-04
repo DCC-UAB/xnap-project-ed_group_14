@@ -68,6 +68,25 @@ El modelo DecoderRNN es responsable de generar captions basados en las caracter�
 ## Train
 Hasta el momento se han probado ejecuciones residuales, de comprobación de ejecución con diferentes metodos (para poder reconstruir maneras de evaluar el modelo, diferentes metricas, ...)
 
+Teniendo en cuenta que los hyperparametros base han sido los siguientes:
+
+- Encoder: Resnet50
+- Encoder dimension: 2048
+- Attention dimension: 256
+- Decoder dimension: 512
+- Embedding size: 300
+- LSTM dimension: 512
+- Optimizer: Adam
+- Loss: CrossEntropyLoss
+- Learning rate: 0.0003
+
+Adicionalmente se han probado diferentes configuraciones:
+- Resnet50/101
+- LSTM dimension
+- Embbedding size
+- Optimizers: SGD, ADAGRAD, ADADELTA
+- Learning rate: 0.1, 0.01, CyclicLR, LambdaLR
+
 ## Results
 Results
 
