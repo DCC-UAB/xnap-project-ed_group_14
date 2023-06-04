@@ -144,13 +144,51 @@ Aqui yo pondria que dura cada epoca, que recursos usamos, podriamos poner alguna
 
 
 ## Results
+
+Despues de las varias pruebas explicadas anteriormente estos son los resultados capturados con [wandb](https://wandb.ai/xn14/caption):
+
+### Loss
+
+![Loss Train](src/result_loss_train.png)
+
+![Loss Train](src/result_loss_validation.png)
+
+Se puede observar que todos los modelos en la curva de entrenamiento siguen el mismo ritmo de aprendizaje con una curva muy poco curvada pero que va descendiendo excepto para el modelo implementedo con CyclicLR y resnet50, que lo podemos ver como la línea verde en el gráfico. Adicinolamente el modelo con la loss más pequeña es el modelo base modificando embedding size a 1024 y el attention dimension a 1024 marcado en rojo.
+
+Sin embargo, los modelos siguen una naturaleza completamente contradictoria respecto a la validación. Casi todos los modelos tienen una loss ascendiente excepto un par, como por ejemplo el marcado en verde con CyclicLR y resnet50.
+
+### BLEU
+
+![Loss Train](src/result_bleu_train.png)
+
+![Loss Train](src/result_bleu_validation.png)
+
+Por lo que respecta a los resultados de BLEU, se han obtenido unos resultados tan bajos debido a que la BLEU se ha calculado con 4-grama (el predeterminado en pytorch). 
+
+Se observa que en entrenamiento todos los modelos siguen una serie ascendente, algunos tardan más en empezar como es el caso del morado. En referencia a las observaciones vista en la loss de entrenamiento, el modelo con embedding size de 1024 y el attention dimension de 1024 marcado en rojo, ha obtenido 0.08 de forma rápida y progresiva a diferencia del resto como puede ser el amarillo que es menos inestable variando de 0.06 a 0.078 de forma muy sucesiva entre epochs. Finalmente se mostrarán predicciones generadas con 15 epochs que ha sido entrenado dicho modelo marcado en rojo.
+
+La BLEU en validación en ninguno de los modelos asciende de 0, esto puede ser por falta de tiempo de entrenamiento, que ya en entrenamiento estamos hablando de hasta 20 epochs y una BLUE inferios a 0.1. Hay que recordar que calculando un BLEU con 4-grama dificulta un buen resutlado en validación.
+
+### Prediccions
+Predicciones con los dos modelos que mejor loss han obtenido:
+
+Modelo: lr=CyclicLR, Optimizador=SGD
+
+![Imagen Predicha AAA](src/aaa_prediction.png)
+
+Modelo: embed_size=1024,attention_dim=1024
+
+![Dog Prediciton](src/dog_prediction.png)
+
+![Dog Prediciton 2](src/dog_prediction2.png)
+
+
 Aqui podemos poner los resultados de las losses y metricas del modelo que consideramos mejor, algunas predicciones con el validation y por ultimo explicar que hemos utlizado unas fotos nuestras para predecir.
 
 Podemos poner possibles mejoras si quereis
 
 ## Referencias
 Poner algunas referencias 
-
 
 ## Contributors
 
