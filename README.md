@@ -10,12 +10,12 @@ Los [datos](https://www.kaggle.com/datasets/adityajn105/flickr8k) que se han uti
 
 Una vez descargados los datos mediante la interfaz de Kaggle, se ha procedido a realizar un split para tener un conjunto de train y otro de validación. De este modo, se ha realizado una separación 80/20, la separación se ha hecho de las caption, por lo que la estructura del dataset es la siguiente:
 
-|               | Imágenes | Captions |
+|               | Imágenes  | Captions  |
 | ---------     | --------- | --------- |
-| Train         | 6473   | 32364   |
-| Validación    |  1619 | 8091   |
-| Total         | 8091   | 40455   |
- 
+| Train         | 6473      | 32364     |
+| Validación    |  1619     | 8091      |
+| Total         | 8091      | 40455     |
+
 
 ## Dataset preprocessing
 Tras haber separado en directorios las imagenes para realizar un train_test_split. Les aplicamos:
@@ -25,13 +25,13 @@ Una vez se han aplicado estas transformaciones a cada uno de las imágenes del d
 ## Entorno de ejecución
 Antes de ejecutar el código tienes que crear un entorno local con conda y activarlo. El archivo [environment.yml](https://github.com/DCC-UAB/XNAP-Project/environment.yml) tiene todas las dependencias necesarias. Ejecute el siguiente comando: ``conda env create -n NOMBREDEENTORNO --file environment.yml `` para crear un entorno conda con todas las dependencias requeridas y luego activarlo:
 ```shell
-foo@bar:~$ conda env create -n ENVNAME --file environment.yml
-foo@bar:~$ conda activate ENVNAME
+conda env create -n ENVNAME --file environment.yml
+conda activate ENVNAME
 ```
 
 To run the example code:
 ```shell
-foo@bar:~$ python main.py
+python main.py
 ```
 ## Arquitectura
 La arquitectura de nuestro modelo es la siguiente:
@@ -97,9 +97,29 @@ Tal i como se ha mencionado anteriormente, se hizo uso de una métrica adicional
 
 ### Diferentes Pruebas
 
+Teniendo en cuenta que los hyperparametros base han sido los siguientes:
 
+- Encoder: Resnet50
+- Encoder dimension: 2048
+- Attention dimension: 256
+- Decoder dimension: 512
+- Embedding size: 300
+- LSTM dimension: 512
+- Optimizer: Adam
+- Loss: CrossEntropyLoss
+- Learning rate: 0.0003
+
+Adicionalmente se han probado diferentes configuraciones:
+- Resnet50/101
+- LSTM dimension
+- Embbedding size
+- Optimizers: SGD, ADAGRAD, ADADELTA
+- Learning rate: 0.1, 0.01, CyclicLR, LambdaLR
+  
 ### Tiempo de entrenamiento y recursos
 Aqui yo pondria que dura cada epoca, que recursos usamos, podriamos poner alguna fotito de Wanb ya q estos tienen graficas viendo el rendimiento del problema, pero sino este punto se puede eliminar
+
+
 
 
 
@@ -111,8 +131,8 @@ Podemos poner possibles mejoras si quereis
 ## Referencias
 Poner algunas referencias 
 
+
 ## Contributors
-Write here the name and UAB mail of the group members
 
 - Eric Alcaraz del Pico- 1603504@uab.cat
 - Raül Yusef Dalgamoni Alonso - 1599225@uab.cat
